@@ -52,21 +52,21 @@ class HandleRequests(BaseHTTPRequestHandler):
             else:
                 response = get_all_animals()
 
-        if response == "locations":
+        if resource == "locations":
             if id is not None:
                 response = get_single_location(id)
 
             else:
                 response = get_all_locations
 
-        if response == "employees":
+        if resource == "employees":
             if id is not None:
                 response = get_single_employee(id)
 
             else:
                 response = get_all_employees
 
-        if response == "customers":
+        if resource == "customers":
             if id is not None:
                 response = get_single_customer(id)
 
