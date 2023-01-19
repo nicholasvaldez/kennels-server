@@ -62,6 +62,11 @@ class HandleRequests(BaseHTTPRequestHandler):
                     response = get_single_employee(id)
                 else:
                     response = get_all_employees()
+            elif resource == "locations":
+                if id is not None:
+                    response = get_single_location(id)
+                else:
+                    response = get_all_locations()
 
         else:  # There is a ? in the path, run the query param functions
             (resource, query) = parsed
@@ -219,10 +224,6 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.wfile.write("".encode())
 
     def do_PUT(self):
-        """Handles PUT requests to the server"""
-        self.do_PUT()
-
-        self._set_headers(204)
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
@@ -230,32 +231,23 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Delete a single animal from the list
+        success = False
+
         if resource == "animals":
-            update_animal(id, post_body)
-
-        # Encode the new animal and send in response
-        self.wfile.write("".encode())
-
-        # Delete a single location from the list
+            success = update_animal(id, post_body)
         if resource == "locations":
-            update_location(id, post_body)
-
-        # Encode the new location and send in response
-        self.wfile.write("".encode())
-
-        # Delete a single customer from the list
-        if resource == "customers":
-            update_customer(id, post_body)
-
-        # Encode the new customer and send in response
-        self.wfile.write("".encode())
-
-        # Delete a single employee from the list
+            success = update_location(id, post_body)
         if resource == "employees":
-            update_employee(id, post_body)
+            success = update_employee(id, post_body)
+        if resource == "customers":
+            success = update_customer(id, post_body)
+        # rest of the elif's
 
-        # Encode the new employee and send in response
+        if success:
+            self._set_headers(204)
+        else:
+            self._set_headers(404)
+
         self.wfile.write("".encode())
 
 # This function is not inside the class. It is the starting
