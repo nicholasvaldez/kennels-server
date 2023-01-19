@@ -6,7 +6,18 @@ from models import Employee
 EMPLOYEES = [
     {
         "id": 1,
-        "name": "Jenna Solis"
+        "name": "Jenna Solis",
+        "location_id": 1
+    },
+    {
+        "id": 2,
+        "name": "Tanner Solis",
+        "location_id": 2
+    },
+    {
+        "id": 3,
+        "name": "Neeka Matthewa",
+        "location_id": 3
     }
 ]
 
@@ -113,3 +124,30 @@ def update_employee(id, new_employee):
             # Found the employee. Update the value.
             EMPLOYEES[index] = new_employee
             break
+
+
+def get_employee_by_id(id):
+
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        # Write the SQL query to get the information you want
+        db_cursor.execute("""
+        select
+            c.id,
+            c.name,
+            c.location_id
+        from Employee c
+        WHERE c.location_id = ?
+        """, (id, ))
+
+        employees = []
+        dataset = db_cursor.fetchall()
+
+        for row in dataset:
+            employee = Employee(
+                row['id'], row['name'], row['location_id'])
+            employees.append(employee.__dict__)
+
+    return employees
