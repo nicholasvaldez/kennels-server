@@ -101,3 +101,7 @@ SELECT
 FROM Employee a
 JOIN Location l
     ON l.id = a.location_id
+
+	INSERT INTO `Animal` VALUES (null, "Moose", "Kennel", "Husky/Pyrenees", 2, 2);
+
+SELECT * FROM Animal ORDER BY id DESC;
